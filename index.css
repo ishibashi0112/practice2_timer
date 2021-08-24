@@ -1,0 +1,45 @@
+body{
+  background-color: rgb(179, 172, 172);
+}
+
+div.main{
+  height: 100vh;
+  width: 100%;
+
+  
+}
+div.timer{
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  width: 70%;
+}
+
+div.timer_input{
+  margin:0 2em 0 2em;
+}
+/* div.timer_minutes{
+  margin:0 2em 0 2em;
+}
+
+div.time_seconds{
+  margin:0 2em 0 2em;
+} */
+
+div.bar{
+  margin: 0 auto;
+  height: 40vh;
+  width: 70%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  
+}
+
+button{
+  width: 100px;
+  height: 100px;
+}
+
