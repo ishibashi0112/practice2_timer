@@ -34,7 +34,7 @@ function deleteView(){
   }
 };
 
-// 桁数変換
+// テキスト作成時の桁数変換
 function digitChange(hour,mintues,seconds){
   let timeArray = [hour,mintues,seconds]
   for (let i = 0; i < timeArray.length; i++) {
@@ -49,36 +49,41 @@ function digitChange(hour,mintues,seconds){
 function createTimeText(hour,mintues,seconds){
   const changeTime =  digitChange(hour,mintues,seconds);
   const text = changeTime[0] + ":" + changeTime[1] + ":" + changeTime[2];
-  return text
+  return text ;
 }
 
 function addView(){
-  const c = document.createElement("div")
   const timeText = createTimeText(getValue().hour, getValue().mintues, getValue().seconds)
-  c.setAttribute("class","timer_view")
+  const c = document.createElement("div")
+  c.setAttribute("id","timer_view")
   c.innerText = (timeText)
   setView.appendChild(c)
-  
-
-  console.log(timeText,getValue().hour)
-  // c.innerText()
 }
 
+function changeText(i){
+  const now = document.getElementById("timer_view");
+  const startedTimeTxet = createTimeText(getValue().hour, getValue().mintues, getValue().seconds - i);
+  now.innerText = startedTimeTxet ;
+}
 
+function timerMovement(){
+  i = 0
+  setInterval(function(){ 
+    i = i +1
+    changeText(i) ;
+    console.log(i)
+  },"1000");
+}
 
 startTimer.addEventListener("click",function(){
   startTimer.textContent = "一時停止" ;
   deleteView() ;
-  addView()
-
-  setInterval(function(){
-    const startedTimeTxet = createTimeText(getValue().hour, getValue().mintues, getValue().seconds - 1);
-    setView.innerText = startedTimeTxet ;
-  },"1000")
+  addView() ;
+  timerMovement() ;
 });
 
 stopTimer.addEventListener("click",function(){
-  
-  console.log(children);
-  returnView()
+  clearInterval(timerMovement)
+  // console.log(children);
+  // returnView()
 });
