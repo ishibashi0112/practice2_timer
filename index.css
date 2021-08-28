@@ -8,7 +8,7 @@ div.main{
 
   
 }
-div.timer{
+#changeTimer{
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -17,16 +17,11 @@ div.timer{
   width: 70%;
 }
 
-div.timer_input{
-  margin:0 2em 0 2em;
-}
-/* div.timer_minutes{
+.timer_input{
   margin:0 2em 0 2em;
 }
 
-div.time_seconds{
-  margin:0 2em 0 2em;
-} */
+
 
 div.bar{
   margin: 0 auto;
