@@ -2,7 +2,7 @@ const hour = document.getElementById("hour");
 const mintues =  document.getElementById("mintues");
 const seconds = document.getElementById("seconds");
 const startTimer = document.getElementById("start_button");
-const stopTimer = document.getElementById("stop_button");
+const cancelTimer = document.getElementById("cancel_button");
 const setView = document.getElementById("changeTimer");
 
 
@@ -27,8 +27,8 @@ function returnView(){
   }
   setView.appendChild(fr)
   console.log(fr)
-  const array1 = ["hour","minutues","seconds"]
-  const array2 = ["時間","分","秒"]
+  const array1 = ["hour","mintues","seconds"]
+  const array2 = [" 時間"," 分"," 秒"]
   for (let i = 0; i < divs.length; i++) {
     const input = document.createElement("input") 
     input.setAttribute("id",array1[i]);
@@ -106,27 +106,77 @@ function timerMovement(now){
 
 
 startTimer.addEventListener("click",function(e){
-  const child = setView.children[0].getAttribute("class")
-  if (child == "timer_input") {
-    e.preventDefault
+  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){
+    e.preventDefault();
   }else if(startTimer.textContent == "開始"){
     startTimer.textContent = "一時停止" ;
-    deleteView() ;
-    addView() ;
+    deleteView();
+    addView();
     const now = document.getElementById("timer_view");
-    timerMovement(now) ;
+    timerMovement(now);
   }else if(startTimer.textContent == "一時停止"){
     startTimer.textContent = "再開" ;
-    m.stopT()
+    m.stopT();
   }else if(startTimer.textContent == "再開"){
     startTimer.textContent = "一時停止" ;
     const progress = document.getElementById("timer_view");
-    console.log(progress)
-    timerMovement(progress) 
+    console.log(progress);
+    timerMovement(progress);
   }
 });
 
-stopTimer.addEventListener("click",function(){
-  m.stopT()
-  returnView()
+cancelTimer.addEventListener("click",function(e){
+  const child = setView.children[0].getAttribute("class");
+  if (child == "timer_input"){
+    e.preventDefault();
+  } else {
+    m.stopT();
+    returnView();
+  }
 });
+
+document.addEventListener("keyup",function(e){
+  if(e.target.tagName == "INPUT" && e.key == "Enter"){
+    if(e.target.id == "hour" || e.target.id == "mintues"){
+      const selectInput = e.path[0] ;
+      const nextInput = e.path[1].nextElementSibling.firstElementChild;
+      nextInput.focus()
+      nextInput.select()
+      if(selectInput.value == ""){
+        selectInput.value = "0"
+      }
+    };
+  };
+});
+
+document.addEventListener("click",function(e){
+  if(e.target.tagName == "INPUT"){
+    e.path[0].select()
+  }
+})
+
+document.addEventListener("input",function(e){
+  const inputData = e.data ;
+  const numberCheck = /^[0-9]+$/ ; //半角0-9のみ
+  const formValue = e.path[0].value;
+  const formId = e.path[0].id
+
+  if(e.target.tagName == "INPUT"){
+    if(numberCheck.test(inputData)){
+      if(formValue.length == 2 && formValue.slice(0,1) == "0"){
+        e.path[0].value = formValue.slice(1);
+      }else if(formValue > 59 && formId == "mintues" || formValue > 59 && formId == "seconds" ){
+        e.path[0].value = "";
+      }
+    }else if(isNaN(formValue)){
+      e.path[0].value = "";
+    }
+  }
+})
+
+document.addEventListener("input",function(e){
+  if(e.target.tagName == "INPUT"){
+    
+  }
+})
+
