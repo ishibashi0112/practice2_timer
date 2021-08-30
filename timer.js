@@ -49,7 +49,7 @@ function deleteView(){
   }
 };
 
-// セッテイング⇄タイマー 切替時のビュー切替
+// セッテイング⇄タイマー 切替時のビュー挿入
 function addView(){
   const timeText = createTimeText(getValue().hour, getValue().mintues, getValue().seconds)
   const c = document.createElement("div")
@@ -98,10 +98,23 @@ const m = { moveT:  function(now, i){
             }
           };
 
+  // let i = 0
+  // m.moveT(now, i)
+  // console.log(timerMove)
 
 function timerMovement(now){
   let i = 0
-  m.moveT(now, i)
+ console.log(now)
+  function count(now) {
+    changeText(now,i)
+    
+    if(!now.textContent == "00:00:00"){
+      setTimeout(count(),1000)
+    }
+    i += 1
+  };
+  count(now);
+  
 }
 
 
@@ -120,7 +133,7 @@ startTimer.addEventListener("click",function(e){
   }else if(startTimer.textContent == "再開"){
     startTimer.textContent = "一時停止" ;
     const progress = document.getElementById("timer_view");
-    console.log(progress);
+    // console.log(progress);
     timerMovement(progress);
   }
 });
