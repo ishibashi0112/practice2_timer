@@ -82,39 +82,27 @@ function changeText(now,i){
   now.innerText = startedTimeTxet ;
 }
 
-let timerMove;
-const m = { moveT:  function(now, i){
-                      timerMove = setInterval(
-                      function(){ 
-                        i = i + 1
-                        changeText(now,i);
-                        if(now.textContent == "00:00:00"){
-                          clearInterval(timerMove);
-                        }
-                      },"1000")
-                    },
-            stopT: function(){
-              clearInterval(timerMove)
-            }
-          };
+let timeOut;
+let i = 0
+function countTime(now){
+  changeText(now,i)
+  i = i + 1
+  timeOut = setTimeout(function(){
+    countTime(now)
+  },"1000")
+  if(now.textContent == "00:00:00"){
+    clearTimeout(timeOut)
+  }
+}
 
-  // let i = 0
-  // m.moveT(now, i)
-  // console.log(timerMove)
+function cansel(){
+  clearTimeout(timeOut)
+  returnView();
+  i = 0
+}
 
 function timerMovement(now){
-  let i = 0
- console.log(now)
-  function count(now) {
-    changeText(now,i)
-    
-    if(!now.textContent == "00:00:00"){
-      setTimeout(count(),1000)
-    }
-    i += 1
-  };
-  count(now);
-  
+  countTime(now);
 }
 
 
@@ -129,11 +117,10 @@ startTimer.addEventListener("click",function(e){
     timerMovement(now);
   }else if(startTimer.textContent == "一時停止"){
     startTimer.textContent = "再開" ;
-    m.stopT();
+    clearTimeout(timeOut)
   }else if(startTimer.textContent == "再開"){
     startTimer.textContent = "一時停止" ;
     const progress = document.getElementById("timer_view");
-    // console.log(progress);
     timerMovement(progress);
   }
 });
@@ -143,8 +130,7 @@ cancelTimer.addEventListener("click",function(e){
   if (child == "timer_input"){
     e.preventDefault();
   } else {
-    m.stopT();
-    returnView();
+    cansel()
   }
 });
 
