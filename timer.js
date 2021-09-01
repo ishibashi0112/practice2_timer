@@ -1,18 +1,6 @@
-const hour = document.getElementById("hour");
-const mintues =  document.getElementById("mintues");
-const seconds = document.getElementById("seconds");
-const startTimer = document.getElementById("start_button");
-const cancelTimer = document.getElementById("cancel_button");
 const setView = document.getElementById("changeTimer");
 
-
-// 入力された時間の取得
-function getValue(){
-  const hourValue = hour.value ;
-  const mintuesValue = mintues.value ;
-  const secondsValue = seconds.value ;
-  return {hour: hourValue, mintues: mintuesValue,seconds: secondsValue}
-};
+// ↓◉関数◉↓
 
 // セッテイング⇄タイマー 切替時のビュー復元
 function returnView(){
@@ -26,7 +14,6 @@ function returnView(){
     fr.appendChild(div)
   }
   setView.appendChild(fr)
-  console.log(fr)
   const array1 = ["hour","mintues","seconds"]
   const array2 = [" 時間"," 分"," 秒"]
   for (let i = 0; i < divs.length; i++) {
@@ -50,13 +37,13 @@ function deleteView(){
 };
 
 // セッテイング⇄タイマー 切替時のビュー挿入
-function addView(){
-  const timeText = createTimeText(getValue().hour, getValue().mintues, getValue().seconds)
-  const c = document.createElement("div")
-  c.setAttribute("id","timer_view")
-  c.innerText = (timeText)
-  setView.appendChild(c)
-}
+function addView(hour,mintues,seconds){
+  const timeText = createTimeText(hour.value, mintues.value, seconds.value)
+  const create = document.createElement("div")
+  create.setAttribute("id","timer_view")
+  create.innerText = timeText;
+  setView.appendChild(create)
+};
 
 // テキスト作成時の桁数変換
 function digitChange(hour,mintues,seconds){
@@ -71,69 +58,132 @@ function digitChange(hour,mintues,seconds){
 
 // タイマーテキスト作成
 function createTimeText(hour,mintues,seconds){
-  const changeTime =  digitChange(hour,mintues,seconds);
+  const changeTime =  digitChange(hour, mintues ,seconds);
   const text = changeTime[0] + ":" + changeTime[1] + ":" + changeTime[2];
   return text ;
-}
+};
 
 // タイムテキストの変更
-function changeText(now,i){
-  const startedTimeTxet = createTimeText(getValue().hour, getValue().mintues, getValue().seconds - i);
+function changeText(now,i,hour,mintues,seconds){
+  const startedTimeTxet = createTimeText(hour, mintues, seconds - i);
   now.innerText = startedTimeTxet ;
-}
+};
 
+// タイマーカウントの制御
 let timeOut;
 let i = 0
-function countTime(now){
-  changeText(now,i)
+function countTime(now,hour,mintues,seconds){
+  // let hourValue = hour.value ;
+  // let mintuesValue = mintues.value ;
+  // let secondsValue = seconds.value ;
+  changeText(now,i,hour.value,mintues.value,seconds.value)
   i = i + 1
   timeOut = setTimeout(function(){
-    countTime(now)
+    countTime(now,hour,mintues,seconds)
   },"1000")
-  if(now.textContent == "00:00:00"){
-    clearTimeout(timeOut)
-  }
-}
+ console.log(mintues.value,seconds.value)
 
+  if(mintues.value > 0 && seconds.value - i == -1 ){
+    i = 0
+    mintues.value -= 1
+    seconds.value = 59
+  }if(hour.value > 0 && mintues.value == 0  &&  seconds.value - i == -1 ){
+    i = 0
+    hour.value -= 1
+    mintues.value = 59
+    seconds.value = 59
+  }else if(now.textContent == "00:00:00"){
+    i = 0
+    clearTimeout(timeOut)
+    setTimeout(function(){alert("終了")},50)
+    returnView();
+  };
+};
+
+// タイマーキャンセル
 function cansel(){
   clearTimeout(timeOut)
   returnView();
   i = 0
 }
 
-function timerMovement(now){
-  countTime(now);
-}
 
+// ↓◉イベント◉↓
+const startTimer = document.getElementById("start_button");
+const cancelTimer = document.getElementById("cancel_button");
+
+// // タイマー開始イベント
+//   let hour ;
+//   let mintues ;
+//   let seconds ;
+// startTimer.addEventListener("click",function(e){
+//   hour = document.getElementById("hour");
+//   mintues =  document.getElementById("mintues");
+//   seconds = document.getElementById("seconds");
+  
+//   // console.log()
+//   if(hour == 0 && mintues == 0 && seconds == 0){  //00:00:00は無効
+//     e.preventDefault();
+//   }else if(startTimer.textContent == "開始"){
+//     startTimer.textContent = "一時停止" ;   
+//     deleteView();
+//     addView(hour,mintues,seconds);
+//     const now = document.getElementById("timer_view");
+//     countTime(now,hour,mintues,seconds);
+//   }else if(startTimer.textContent == "一時停止"){
+//     console.log("o")
+//     startTimer.textContent = "再開" ;
+//     clearTimeout(timeOut);
+//   }else if(startTimer.textContent == "再開"){
+//     startTimer.textContent = "一時停止" ;
+//     const progress = document.getElementById("timer_view");
+//     countTime(progress,hour,mintues,seconds);
+//   };
+// });
+
+// タイマー開始イベント
+
+const hour = document.getElementById("hour");
+const mintues =  document.getElementById("mintues");
+const seconds = document.getElementById("seconds");
 
 startTimer.addEventListener("click",function(e){
-  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){
+  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){  //00:00:00は無効
     e.preventDefault();
   }else if(startTimer.textContent == "開始"){
-    startTimer.textContent = "一時停止" ;
+    startTimer.textContent = "一時停止" ;   
     deleteView();
-    addView();
+    addView(hour,mintues,seconds);
     const now = document.getElementById("timer_view");
-    timerMovement(now);
-  }else if(startTimer.textContent == "一時停止"){
-    startTimer.textContent = "再開" ;
-    clearTimeout(timeOut)
-  }else if(startTimer.textContent == "再開"){
-    startTimer.textContent = "一時停止" ;
-    const progress = document.getElementById("timer_view");
-    timerMovement(progress);
+    countTime(now,hour,mintues,seconds);
   }
 });
 
+startTimer.addEventListener("click",function(e){
+  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){  //00:00:00は無効
+    e.preventDefault();
+  }else if(startTimer.textContent == "一時停止"){
+    console.log("o")
+    startTimer.textContent = "再開" ;
+    clearTimeout(timeOut);
+  }else if(startTimer.textContent == "再開"){
+    startTimer.textContent = "一時停止" ;
+    const progress = document.getElementById("timer_view");
+    countTime(progress,hour,mintues,seconds);
+  };
+});
+
+// キャンセルイベント
 cancelTimer.addEventListener("click",function(e){
   const child = setView.children[0].getAttribute("class");
   if (child == "timer_input"){
     e.preventDefault();
   } else {
-    cansel()
-  }
+    cansel();
+  };
 });
 
+// ENTERタップ→次のフォームをフォーカス。
 document.addEventListener("keyup",function(e){
   if(e.target.tagName == "INPUT" && e.key == "Enter"){
     if(e.target.id == "hour" || e.target.id == "mintues"){
@@ -143,20 +193,22 @@ document.addEventListener("keyup",function(e){
       nextInput.select()
       if(selectInput.value == ""){
         selectInput.value = "0"
-      }
+      };
     };
   };
 });
 
+// フォーム選択時にテキストを自動選択
 document.addEventListener("click",function(e){
   if(e.target.tagName == "INPUT"){
     e.path[0].select()
   }
 })
 
+// 入力制限
 document.addEventListener("input",function(e){
-  const inputData = e.data ;
-  const numberCheck = /^[0-9]+$/ ; //半角0-9のみ
+  const inputData = e.data ;          //入力された数値を取得
+  const numberCheck = /^[0-9]+$/ ;    //半角0-9のみ
   const formValue = e.path[0].value;
   const formId = e.path[0].id
 
@@ -169,13 +221,13 @@ document.addEventListener("input",function(e){
       }
     }else if(isNaN(formValue)){
       e.path[0].value = "";
-    }
-  }
-})
+    };
+  };
+});
 
-document.addEventListener("input",function(e){
-  if(e.target.tagName == "INPUT"){
+// document.addEventListener("input",function(e){
+//   if(e.target.tagName == "INPUT"){
     
-  }
-})
+//   }
+// })
 
