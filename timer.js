@@ -73,15 +73,12 @@ function changeText(now,i,hour,mintues,seconds){
 let timeOut;
 let i = 0
 function countTime(now,hour,mintues,seconds){
-  // let hourValue = hour.value ;
-  // let mintuesValue = mintues.value ;
-  // let secondsValue = seconds.value ;
+  console.log(seconds)
   changeText(now,i,hour.value,mintues.value,seconds.value)
   i = i + 1
   timeOut = setTimeout(function(){
     countTime(now,hour,mintues,seconds)
   },"1000")
- console.log(mintues.value,seconds.value)
 
   if(mintues.value > 0 && seconds.value - i == -1 ){
     i = 0
@@ -97,6 +94,7 @@ function countTime(now,hour,mintues,seconds){
     clearTimeout(timeOut)
     setTimeout(function(){alert("終了")},50)
     returnView();
+    Hour = Mintues = Seconds = ""
   };
 };
 
@@ -105,31 +103,30 @@ function cansel(){
   clearTimeout(timeOut)
   returnView();
   i = 0
+  Hour = Mintues = Seconds = ""
 }
 
 
 // ↓◉イベント◉↓
 const startTimer = document.getElementById("start_button");
 const cancelTimer = document.getElementById("cancel_button");
+let Hour = document.getElementById("hour");
+let Mintues =  document.getElementById("mintues");
+let Seconds = document.getElementById("seconds");
 
 // // タイマー開始イベント
-//   let hour ;
-//   let mintues ;
-//   let seconds ;
 // startTimer.addEventListener("click",function(e){
-//   hour = document.getElementById("hour");
-//   mintues =  document.getElementById("mintues");
-//   seconds = document.getElementById("seconds");
-  
-//   // console.log()
-//   if(hour == 0 && mintues == 0 && seconds == 0){  //00:00:00は無効
+//   Hour = document.getElementById("hour");
+//   Mintues =  document.getElementById("mintues");
+//   Seconds = document.getElementById("seconds");
+//   if(Hour.value == 0 && Mintues.value == 0 && Seconds.value == 0){  //00:00:00は無効
 //     e.preventDefault();
 //   }else if(startTimer.textContent == "開始"){
 //     startTimer.textContent = "一時停止" ;   
 //     deleteView();
-//     addView(hour,mintues,seconds);
+//     addView(Hour, Mintues, Seconds);
 //     const now = document.getElementById("timer_view");
-//     countTime(now,hour,mintues,seconds);
+//     countTime(now,Hour,Mintues,Seconds);
 //   }else if(startTimer.textContent == "一時停止"){
 //     console.log("o")
 //     startTimer.textContent = "再開" ;
@@ -137,41 +134,46 @@ const cancelTimer = document.getElementById("cancel_button");
 //   }else if(startTimer.textContent == "再開"){
 //     startTimer.textContent = "一時停止" ;
 //     const progress = document.getElementById("timer_view");
-//     countTime(progress,hour,mintues,seconds);
+//     countTime(progress,Hour, Mintues, Seconds);
 //   };
 // });
 
-// タイマー開始イベント
-
-const hour = document.getElementById("hour");
-const mintues =  document.getElementById("mintues");
-const seconds = document.getElementById("seconds");
-
 startTimer.addEventListener("click",function(e){
-  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){  //00:00:00は無効
+  Hour = document.getElementById("hour");
+  Mintues =  document.getElementById("mintues");
+  Seconds = document.getElementById("seconds");
+  if(Hour.value == 0 && Mintues.value == 0 && Seconds.value == 0){  //00:00:00は無効
     e.preventDefault();
   }else if(startTimer.textContent == "開始"){
-    startTimer.textContent = "一時停止" ;   
+    startTimer.textContent = "一時停止" ;  
     deleteView();
-    addView(hour,mintues,seconds);
+    addView(Hour, Mintues, Seconds);
     const now = document.getElementById("timer_view");
-    countTime(now,hour,mintues,seconds);
+    countTime(now,Hour,Mintues,Seconds);
+    
   }
+  startTimer.setAttribute("id","a") 
+
 });
 
-startTimer.addEventListener("click",function(e){
-  if(hour.value == 0 && mintues.value == 0 && seconds.value == 0){  //00:00:00は無効
-    e.preventDefault();
-  }else if(startTimer.textContent == "一時停止"){
-    console.log("o")
-    startTimer.textContent = "再開" ;
+document.addEventListener("click",function(e){
+  if(e.target.id == "a"){
+    const j = document.getElementById("a");
+    j.textContent = "再開"
     clearTimeout(timeOut);
-  }else if(startTimer.textContent == "再開"){
-    startTimer.textContent = "一時停止" ;
-    const progress = document.getElementById("timer_view");
-    countTime(progress,hour,mintues,seconds);
-  };
-});
+  }
+})
+// else if(startTimer.textContent == "一時停止"){
+//   console.log("o")
+//   startTimer.textContent = "再開" ;
+//   clearTimeout(timeOut);
+// }else if(startTimer.textContent == "再開"){
+//   startTimer.textContent = "一時停止" ;
+//   const progress = document.getElementById("timer_view");
+//   countTime(progress,Hour, Mintues, Seconds);
+// };
+
+
 
 // キャンセルイベント
 cancelTimer.addEventListener("click",function(e){
