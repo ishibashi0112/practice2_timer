@@ -42,6 +42,10 @@ input{
   text-align: center;
 }
 
+#timer_view{
+  font-size: 5rem;
+}
+
 .bar{
   width: 100%;
   flex: 1;
@@ -76,9 +80,19 @@ button{
   background-color: rgb(182, 177, 177,0.2);
 }
 
-#start_button{
+#start_button, #restart_button, #stop_button{
   margin-left: 40px;
+
+}
+
+#start_button,#restart_button{
   color: rgb(125, 240, 11,0.4);
   background-color: rgba(29, 105, 29, 0.4);
 }
+
+#stop_button{
+  background-color:rgba(238, 53, 93, 0.4);
+  color:rgb(243, 177, 152)
+}
+
 
