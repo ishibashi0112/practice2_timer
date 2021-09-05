@@ -37,10 +37,10 @@ function deleteView(){
 // セッテイング⇄タイマー 切替時のビュー挿入
 function addView(hour,mintues,seconds){
   const timeText = createTimeText(hour, mintues, seconds)
-  const create = document.createElement("div")
-  create.setAttribute("id","timer_view")
-  create.innerText = timeText;
-  setView.appendChild(create)
+  const div = document.createElement("div")
+  div.setAttribute("id","timer_view")
+  div.innerText = timeText;
+  setView.appendChild(div)
 };
 
 // テキスト作成時の桁数変換
@@ -57,7 +57,7 @@ function digitChange(hour,mintues,seconds){
 // タイマーテキスト作成
 function createTimeText(hour,mintues,seconds){
   const changeTime =  digitChange(hour, mintues ,seconds);
-  const text = changeTime[0] + " : " + changeTime[1] + " : " + changeTime[2];
+  const text = changeTime[0] + ":" + changeTime[1] + ":" + changeTime[2];
   return text ;
 };
 
@@ -81,12 +81,16 @@ function countTime(now,hour,mintues,seconds){
     i = 0;
     mintues -= 1;
     seconds = 59;
+    Mintues = mintues
+    Seconds = seconds
   }if(hour > 0 && mintues == 0  &&  seconds - i == -1 ){
     i = 0 ;
     hour -= 1 ;
     mintues = 59;
     seconds = 59;
-  }else if(now.textContent == "00 : 00 : 00"){
+    Mintues = mintues
+    Seconds = seconds
+  }else if(now.textContent == "00:00:00"){
     i = 0 ;
     clearTimeout(timeOut);
     setTimeout(function(){alert("終了")},50);
@@ -111,21 +115,22 @@ function cansel(){
 // タイマー開始イベント
 const startTimer = document.getElementById("start_button");
 const cancelTimer = document.getElementById("cancel_button");
-let hour, mintues, seconds 
+let Hour, Mintues, Seconds ;
 document.addEventListener("click",function(e){
   if(e.target.id == "start_button"){
-    hour = document.getElementById("hour").value;
-    mintues =  document.getElementById("mintues").value;
-    seconds = document.getElementById("seconds").value;
-    if(hour == 0 && mintues == 0 && seconds == 0){  //00:00:00は無効
+    Hour = document.getElementById("hour").value;
+    Mintues =  document.getElementById("mintues").value;
+    Seconds = document.getElementById("seconds").value;
+    console.log(Hour , Mintues ,Seconds)
+    if(Hour == 0 && Mintues == 0 && Seconds == 0){  //00:00:00は無効
       e.preventDefault();
     }else {
     startTimer.textContent = "一時停止"
     startTimer.setAttribute("id","stop_button")
     deleteView();
-    addView(hour, mintues, seconds);
+    addView(Hour, Mintues, Seconds);
     const now = document.getElementById("timer_view");
-    countTime(now,hour,mintues,seconds);
+    countTime(now,Hour,Mintues,Seconds);
     }
   }else if(e.target.id == "stop_button"){
     startTimer.textContent = "再開"
@@ -134,8 +139,10 @@ document.addEventListener("click",function(e){
   }else if(e.target.id == "restart_button"){
     startTimer.textContent = "一時停止" ;
     startTimer.setAttribute("id","stop_button")
+    console.log(Hour, Mintues, Seconds)
     const progress = document.getElementById("timer_view");
-    countTime(progress,hour, mintues, seconds);
+    countTime(progress,Hour, Mintues, Seconds);
+    console.log(progress)
   }
 })
 
